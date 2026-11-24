@@ -58,6 +58,34 @@ export function SiteHeader({ locale, onLocaleChange, onSignOut, signedIn = false
   </>
 }
 
+export function DashboardMobileTabBar({ locale, unreadCount = 0, workspaceHref = "/account" }: { locale: Locale; unreadCount?: number; workspaceHref?: string }) {
+  const pathname = usePathname() || "/"
+  const [menuOpen, setMenuOpen] = useState(false)
+  const tabs = [
+    { href: "/", label: t(locale, "home"), icon: House, active: pathname === "/" },
+    { href: "/search", label: t(locale, "search"), icon: Search, active: pathname.startsWith("/search") },
+    { href: "/account/bookings", label: translateText(locale, "Requests"), icon: CalendarClock, active: pathname.startsWith("/account/bookings") },
+    { href: "/account/notifications", label: translateText(locale, "Alerts"), icon: Bell, active: pathname.startsWith("/account/notifications"), alert: unreadCount > 0 },
+  ]
+  const menuLinks = [
+    [t(locale, "home"), "/"],
+    [t(locale, "workers"), "/search"],
+    [t(locale, "jobs"), "/jobs"],
+    [t(locale, "categories"), "/categories"],
+    [t(locale, "dashboard"), workspaceHref],
+  ]
+  return <>
+    <nav aria-label={translateText(locale, "Main navigation")} className="mobile-tab-bar">
+      {tabs.map((tab) => {
+        const Icon = tab.icon
+        return <Link aria-current={tab.active ? "page" : undefined} className={tab.active ? "mobile-tab is-active" : "mobile-tab"} href={tab.href} key={tab.href} onClick={() => setMenuOpen(false)}><Icon aria-hidden="true" size={20} /><span>{tab.label}</span>{tab.alert && <span className="mobile-tab-dot" />}</Link>
+      })}
+      <button aria-controls="mobile-dashboard-menu" aria-expanded={menuOpen} aria-label={translateText(locale, "More")} className={menuOpen ? "mobile-tab mobile-tab-button is-active" : "mobile-tab mobile-tab-button"} onClick={() => setMenuOpen(!menuOpen)} type="button"><Grid2X2 aria-hidden="true" size={20} /><span>{translateText(locale, "More")}</span></button>
+    </nav>
+    {menuOpen && <nav aria-label={translateText(locale, "Main navigation")} className="mobile-dashboard-menu is-open" id="mobile-dashboard-menu">{menuLinks.map(([label, href]) => <Link href={href} key={href} onClick={() => setMenuOpen(false)}>{label}</Link>)}</nav>}
+  </>
+}
+
 export function Footer({ locale }: { locale: Locale }) {
   return <footer className="site-footer"><div className="footer-main"><div className="footer-brand"><Brand locale={locale} /><p>{translateText(locale, "Local work, closer to home. Making opportunity and reliable help easier to find in Adama.")}</p><div className="footer-locale"><MapPin size={14} /> {translateText(locale, "Adama, Ethiopia")}</div></div>
     <div className="footer-column"><h3>{translateText(locale, "Explore")}</h3><Link href="/search">{t(locale, "searchWorkers")}</Link><Link href="/jobs">{translateText(locale, "Find a job")}</Link><Link href="/categories">{translateText(locale, "Browse services")}</Link><Link href="/businesses/sample-business">{t(locale, "businesses")}</Link></div>

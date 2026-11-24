@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react"
 import { ArrowRight, BadgeCheck, BriefcaseBusiness, Building2, Check, ChevronRight, Clock3, MapPin, Phone, Search, ShieldCheck, UserRound, Users, X } from "lucide-react"
 import { DashboardPage } from "./dashboard"
 import { BookingDialog, CategoriesPage, HomePage, InfoPage, JobDetailPage, JobsPage, SearchPage, ServiceDetailPage, WorkerProfilePage } from "./marketplace"
-import { Brand, Footer, SiteHeader, Toast } from "./shared"
+import { Brand, DashboardMobileTabBar, Footer, SiteHeader, Toast } from "./shared"
 import { applications as initialApplications, businessProfiles, categories, initialBookings, jobs, services, workers, type ApplicationRecord, type BusinessProfile as BusinessProfileRecord, type DemoBooking, type Job, type Locale, type MarketplaceService, type Worker } from "@/lib/carava-data"
 import { publishDemoNotification, sendDemoInboxMessage, sendDemoSupportMessage, useDemoNotifications } from "@/lib/carava-demo-activity"
 import { accountTypeKey, isPhoneValid, parseAccountType, phoneKey, profileKeyFor, readAccountType, readOnboardingProfile, roleForAccountType, signedInKey, writeOnboardingProfile } from "@/lib/carava-demo-session"
@@ -135,7 +135,7 @@ export function CaravaApp() {
 
   const dashboardMatch = pathname.match(/^\/(account|worker|business|admin)(?:\/|$)/)
   const role = dashboardMatch?.[1] as "account" | "worker" | "business" | "admin" | undefined
-  if (role) return <><DashboardPage applications={jobApplications} bookings={bookings} displayName={role === "business" ? businessProfile.name : role === "worker" ? "Abebe Tadesse" : role === "admin" ? "Carava Admin" : accountName} jobs={marketplaceJobs} locale={locale} onApplyJob={applyToJob} onCreateJob={createJob} onUpdateJob={updateJob} onLocaleChange={changeLocale} onToast={showToast} onToggleSave={toggleSaved} onUpdateApplication={updateApplicationStage} onUpdateBooking={updateBooking} onUpdateJobStatus={updateJobStatus} pathname={pathname} role={role} savedIds={savedIds} /><Toast locale={locale} message={toastMessage} onClose={() => setToastMessage("")} /></>
+  if (role) return <><DashboardPage applications={jobApplications} bookings={bookings} displayName={role === "business" ? businessProfile.name : role === "worker" ? "Abebe Tadesse" : role === "admin" ? "Carava Admin" : accountName} jobs={marketplaceJobs} locale={locale} onApplyJob={applyToJob} onCreateJob={createJob} onUpdateJob={updateJob} onLocaleChange={changeLocale} onToast={showToast} onToggleSave={toggleSaved} onUpdateApplication={updateApplicationStage} onUpdateBooking={updateBooking} onUpdateJobStatus={updateJobStatus} pathname={pathname} role={role} savedIds={savedIds} /><DashboardMobileTabBar locale={locale} unreadCount={unreadCount} workspaceHref={workspaceHref} /><Toast locale={locale} message={toastMessage} onClose={() => setToastMessage("")} /></>
 
   const parts = pathname.split("/").filter(Boolean)
   const page = parts[0] ?? "home"
